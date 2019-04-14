@@ -21,11 +21,32 @@ void func(int sockfd)
 		bzero(buff,max);
 		recvfrom(sockfd,buff,sizeof(buff),0,(struct sockadd*)&cli,&len);
 		printf("%s\n",buff);
-		bzero(buff,max);
-		n=0;
-		printf("Message for client:");
-		while((buff[n++]=getchar())!='\n')
+		int i,j=0;
+		for(i=0;buff[i]!='\n';i++)
 			;
+		i--;
+		while(j<i)
+		{
+			if(buff[j]==buff[i])
+			{
+				j++;
+				i--;
+			}
+			else
+				break;
+		}
+		if(j>=i)
+		{
+			bzero(buff,max);
+			char *ans="It is a palindrome";
+			strcpy(buff,ans);
+		}
+		else
+		{
+			bzero(buff,max);
+			char *ans="It is not a palindrome";
+			strcpy(buff,ans);
+		}
 		sendto(sockfd,buff,sizeof(buff),0,(const struct sockadd*)&cli,len);
 		if(strncmp(buff,"exit",4)==0)
 		{
